@@ -13,16 +13,16 @@ City neon-sunset grade — and exports it as a PNG to share.
 
 - **Three photo slots** — upload your own photos or use the built-in
   samples (AI-generated, made for this entry). Each slot feeds the panels.
-- **Three multi-panel layouts** — Vice Grid (big hero + two stacked),
+- **Three multi-panel frames** — Vice Grid (big hero + two stacked),
   Sunset Strip (three tall panels), Hero Shot (one photo, edge to edge).
   Tick "One photo for all panels" to fill every panel from Photo A.
-- **Crop and position per panel** — click a panel in the preview to select
+- **Crop and position per panel** — click a panel in the preview to pick
   it, drag to move its photo, scroll to zoom, or use the Zoom / Pan sliders.
-- **Caption lettering** — a title in heavy condensed Anton (SIL Open Font
+- **Caption lettering** — a headline in heavy condensed Anton (SIL Open Font
   License, vendored under `app/fonts/`) with a poster slant and neon glow,
   plus a letterspaced tagline.
 - **Neon-sunset grade** — a warm-to-magenta grade, vignette and a
-  vector-drawn palm-sunset badge, all adjustable.
+  vector-drawn palm-sunset emblem, all adjustable.
 - **One-step export** — PNG at 1080×1080, 1080×1350 or 1920×1080, or all
   three at once.
 
@@ -37,7 +37,7 @@ node serve.ts   # then open http://localhost:8080
 ```
 
 Screenshots are deterministic staged scenes:
-`?shot=cover|editor&size=1080x1080|1080x1350|1920x1080&layout=vice|strip|hero&title=...`
+`?shot=cover|editor&size=1080x1080|1080x1350|1920x1080&frame=grid|columns|solo&title=...`
 (see `shots.json`).
 
 ## Layout
@@ -47,10 +47,9 @@ app/
   index.html        editor page
   style.css         dark neon editor UI
   src/
-    main.js         wiring: slots, layout, caption, export, shot mode
-    cover.js        the cover renderer: panels, grade, lettering, badge
-    layouts.js      panel layouts, export sizes, panel transforms
-    shots.js        staged screenshot scenes (?shot=)
+    editor.js       wiring: slots, frame, caption, export, shot scenes
+    painter.js      the cover renderer: panels, grade, lettering, emblem
+    frames.js       panel frames, export sizes, panel crops
   samples/          three AI-generated sample photos (boulevard, beach, skyline)
   fonts/            Anton-Regular.ttf (SIL OFL 1.1) + OFL.txt
 main.ts             hands app/ + screenshots/ to /output + dossier.json

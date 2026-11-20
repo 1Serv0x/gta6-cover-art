@@ -7,22 +7,22 @@
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<main class="app">
-  <section class="controls" aria-label="Cover controls">
+<div class="studio">
+  <aside class="sidebar" aria-label="Cover controls">
     <header>
       <h1>Neon Vice <span>Cover Studio</span></h1>
-      <p>Your photo, a caption, and a Vice City sunset — made into
-        multi-panel cover art, right in your browser. Nothing is uploaded.</p>
+      <p>Turn your photo and a caption into multi-panel cover art with a Vice
+        City sunset — right in your browser. Nothing is uploaded.</p>
     </header>
 
     <fieldset class="photos">
       <legend>Photos</legend>
-      <p class="hint">Three slots, one per panel. Upload your own, or use a sample.</p>
+      <p class="hint">Three slots, one for each panel. Upload your own, or try a sample.</p>
       <div class="slot" data-slot="0">
         <img class="thumb" alt="Photo slot A preview">
         <div class="slot-body">
           <strong>Photo A</strong>
-          <label class="file-btn">Upload <input id="slot-0" type="file" accept="image/*"></label>
+          <label class="file-btn">Upload <input id="pick-0" type="file" accept="image/*"></label>
           <button type="button" class="sample-btn" data-sample="boulevard">Sample</button>
         </div>
       </div>
@@ -30,7 +30,7 @@
         <img class="thumb" alt="Photo slot B preview">
         <div class="slot-body">
           <strong>Photo B</strong>
-          <label class="file-btn">Upload <input id="slot-1" type="file" accept="image/*"></label>
+          <label class="file-btn">Upload <input id="pick-1" type="file" accept="image/*"></label>
           <button type="button" class="sample-btn" data-sample="beach">Sample</button>
         </div>
       </div>
@@ -38,63 +38,63 @@
         <img class="thumb" alt="Photo slot C preview">
         <div class="slot-body">
           <strong>Photo C</strong>
-          <label class="file-btn">Upload <input id="slot-2" type="file" accept="image/*"></label>
+          <label class="file-btn">Upload <input id="pick-2" type="file" accept="image/*"></label>
           <button type="button" class="sample-btn" data-sample="skyline">Sample</button>
         </div>
       </div>
-      <label class="check"><input id="fill-all" type="checkbox"> One photo for all panels</label>
+      <label class="check"><input id="single-photo" type="checkbox"> One photo for all panels</label>
     </fieldset>
 
     <fieldset>
-      <legend>Layout</legend>
-      <div class="layout-pick" role="radiogroup" aria-label="Panel layout">
-        <label><input type="radio" name="layout" value="vice" checked> Vice Grid</label>
-        <label><input type="radio" name="layout" value="strip"> Sunset Strip</label>
-        <label><input type="radio" name="layout" value="hero"> Hero Shot</label>
+      <legend>Frame</legend>
+      <div class="choice-list" role="radiogroup" aria-label="Panel frame">
+        <label><input type="radio" name="frame" value="grid" checked> Vice Grid</label>
+        <label><input type="radio" name="frame" value="columns"> Sunset Strip</label>
+        <label><input type="radio" name="frame" value="solo"> Hero Shot</label>
       </div>
-      <p class="hint" id="layout-hint">Big hero panel, two stacked panels.</p>
+      <p class="hint" id="frame-note">One big hero panel, two stacked beside it.</p>
     </fieldset>
 
     <fieldset>
-      <legend>Selected panel <span id="panel-name">1</span></legend>
-      <p class="hint">Click a panel in the preview to select it, drag to move the
+      <legend>Selected panel <span id="panel-number">1</span></legend>
+      <p class="hint">Click a panel in the preview to pick it, drag to move the
         photo, scroll to zoom.</p>
-      <label>Zoom <input id="zoom" type="range" min="1" max="3" step="0.05" value="1.15"></label>
-      <label>Pan left–right <input id="pan-x" type="range" min="-0.45" max="0.45" step="0.01" value="0"></label>
-      <label>Pan up–down <input id="pan-y" type="range" min="-0.45" max="0.45" step="0.01" value="0"></label>
-      <button id="reset-panel" type="button">Reset this panel</button>
+      <label>Zoom <input id="crop-zoom" type="range" min="1" max="3" step="0.05" value="1.15"></label>
+      <label>Pan left–right <input id="crop-x" type="range" min="-0.45" max="0.45" step="0.01" value="0"></label>
+      <label>Pan up–down <input id="crop-y" type="range" min="-0.45" max="0.45" step="0.01" value="0"></label>
+      <button id="crop-reset" type="button">Reset this panel</button>
     </fieldset>
 
     <fieldset>
-      <legend>Caption</legend>
-      <label>Title <input id="title" type="text" maxlength="30" value="Neon Vice"></label>
-      <label>Tagline <input id="subtitle" type="text" maxlength="48" value="Vice City • 2026"></label>
+      <legend>Words</legend>
+      <label>Headline <input id="headline" type="text" maxlength="30" value="Neon Vice"></label>
+      <label>Tagline <input id="tagline" type="text" maxlength="48" value="Vice City • 2026"></label>
     </fieldset>
 
     <fieldset>
-      <legend>Finish</legend>
-      <label>Sunset grade <input id="grade" type="range" min="0" max="1.5" step="0.05" value="1"></label>
-      <label class="check"><input id="badge" type="checkbox" checked> Palm-sunset badge</label>
+      <legend>Colour</legend>
+      <label>Sunset warmth <input id="warmth" type="range" min="0" max="1.5" step="0.05" value="1"></label>
+      <label class="check"><input id="emblem" type="checkbox" checked> Palm-sunset emblem</label>
     </fieldset>
 
     <fieldset class="export">
-      <legend>Export PNG</legend>
-      <div class="size-pick" role="radiogroup" aria-label="Export size">
-        <label><input type="radio" name="size" value="1080x1080" checked> Square 1080×1080</label>
-        <label><input type="radio" name="size" value="1080x1350"> Portrait 1080×1350</label>
-        <label><input type="radio" name="size" value="1920x1080"> Wide 1920×1080</label>
+      <legend>Save PNG</legend>
+      <div class="choice-list" role="radiogroup" aria-label="Export size">
+        <label><input type="radio" name="ratio" value="1080x1080" checked> Square 1080×1080</label>
+        <label><input type="radio" name="ratio" value="1080x1350"> Portrait 1080×1350</label>
+        <label><input type="radio" name="ratio" value="1920x1080"> Wide 1920×1080</label>
       </div>
-      <button id="export" type="button" class="primary">Export this size</button>
-      <button id="export-all" type="button">Export all three sizes</button>
-      <p id="status" role="status"></p>
+      <button id="download" type="button" class="primary">Export this size</button>
+      <button id="download-all" type="button">Export all three sizes</button>
+      <p id="notice" role="status"></p>
     </fieldset>
-  </section>
+  </aside>
 
-  <section class="preview" aria-label="Cover preview">
-    <canvas id="cover" width="1080" height="1080" aria-label="Live cover preview"></canvas>
-    <p class="preview-note">Live preview — drag a panel to move its photo, scroll to zoom.</p>
+  <section class="stage" aria-label="Cover preview">
+    <canvas id="poster" width="1080" height="1080" aria-label="Live cover preview"></canvas>
+    <p class="stage-note">Live preview — drag a panel to move its photo, scroll to zoom.</p>
   </section>
-</main>
-<script type="module" src="./src/main.js"></script>
+</div>
+<script type="module" src="./src/editor.js"></script>
 </body>
 </html>
