@@ -2,11 +2,21 @@
 // per-panel cropping (drag to pan, scroll to zoom, or the sliders), the live
 // preview, and PNG export in the three post sizes. A `?shot=` query stages a
 // fixed scene for a screenshot instead (stageScene, below).
-import { FRAMES, OUTPUT_SIZES, newCrops, newCrop } from './frames.js';
+//
+// Polished pass on exports: the export buttons lock while a PNG is being
+// written (no double-clicks, no overlapping downloads), "Export all three"
+// runs the sizes one at a time with a short pause between them so the
+// browser finishes each download, and file names are built from the
+// headline (slugified, falling back to "neon-vice-cover") instead of a
+// fixed name. Drag pans are clamped to the slider range via clampPan.
+
+import { FRAMES, OUTPUT_SIZES, newCrops, newCrop, clampPan } from './frames.js';
 import { paintPoster, renderForExport, frameBoxes } from './painter.js';
 
 const poster = document.getElementById('poster');
 const notice = document.getElementById('notice');
+const downloadBtn = document.getElementById('download');
+const downloadAllBtn = document.getElementById('download-all');
 const SAMPLE_NAMES = ['boulevard', 'beach', 'skyline'];
 
 const cover = {
@@ -22,6 +32,7 @@ const cover = {
 };
 
 let outputSize = OUTPUT_SIZES[0];
+let exporting = false;
 
 /** Loads an image from a URL, resolving once it can be painted. */
 export function fetchImage(url) {
@@ -64,12 +75,29 @@ async function fillWithSamples() {
   await Promise.all(SAMPLE_NAMES.map((name, i) => putSampleIn(i, name)));
 }
 
+/** Turns the headline into a safe file-name slug; "Neon Vice" -> "neon-vice". */
+export function slugifyHeadline(text) {
+  const slug = (text || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return slug || 'neon-vice-cover';
+}
+
+function exportFileName(w, h) {
+  return `${slugifyHeadline(cover.headline)}-${w}x${h}.png`;
+}
+
+function setExporting(busy) {
+  exporting = busy;
+  downloadBtn.disabled = busy;
+  downloadAllBtn.disabled = busy;
+}
+
 function savePNG(w, h) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     renderForExport(cover, w, h).toBlob((blob) => {
+      if (!blob) return reject(new Error('PNG export produced no data'));
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `neon-vice-cover-${w}x${h}.png`;
+      a.download = exportFileName(w, h);
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 5000);
       resolve(blob);
@@ -78,9 +106,18 @@ function savePNG(w, h) {
 }
 
 async function exportSingle(size) {
-  const blob = await savePNG(size.w, size.h);
-  notice.textContent = `Saved neon-vice-cover-${size.w}x${size.h}.png (${Math.round(blob.size / 1024)} KiB)`;
-  return blob;
+  if (exporting) return null;
+  setExporting(true);
+  try {
+    const blob = await savePNG(size.w, size.h);
+    notice.textContent = `Saved ${exportFileName(size.w, size.h)} (${Math.round(blob.size / 1024)} KiB)`;
+    return blob;
+  } catch (err) {
+    notice.textContent = `Export failed: ${err.message}`;
+    return null;
+  } finally {
+    setExporting(false);
+  }
 }
 
 // --- photo slots -----------------------------------------------------------
@@ -161,10 +198,22 @@ document.querySelectorAll('input[name=ratio]').forEach((radio) => {
     paint();
   });
 });
-document.getElementById('download').addEventListener('click', () => exportSingle(outputSize));
-document.getElementById('download-all').addEventListener('click', async () => {
-  for (const size of OUTPUT_SIZES) await exportSingle(size);
-  notice.textContent = 'Saved all three sizes: 1080×1080, 1080×1350, 1920×1080.';
+downloadBtn.addEventListener('click', () => exportSingle(outputSize));
+downloadAllBtn.addEventListener('click', async () => {
+  if (exporting) return;
+  setExporting(true);
+  try {
+    for (const size of OUTPUT_SIZES) {
+      await savePNG(size.w, size.h);
+      // Give the browser a beat to finish each download before the next.
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    }
+    notice.textContent = 'Saved all three sizes: 1080×1080, 1080×1350, 1920×1080.';
+  } catch (err) {
+    notice.textContent = `Export failed: ${err.message}`;
+  } finally {
+    setExporting(false);
+  }
 });
 
 // --- preview: click to pick a panel, drag to pan, scroll to zoom -----------------
@@ -190,8 +239,8 @@ poster.addEventListener('pointermove', (e) => {
   if (!drag) return;
   const hit = panelUnder(e.clientX, e.clientY);
   const crop = pickedCrop();
-  crop.dx = drag.start.dx + (hit.x - drag.x) / drag.box.w;
-  crop.dy = drag.start.dy + (hit.y - drag.y) / drag.box.h;
+  crop.dx = clampPan(drag.start.dx + (hit.x - drag.x) / drag.box.w);
+  crop.dy = clampPan(drag.start.dy + (hit.y - drag.y) / drag.box.h);
   paint();
 });
 poster.addEventListener('pointerup', () => { drag = null; });

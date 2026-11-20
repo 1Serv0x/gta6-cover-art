@@ -1,4 +1,7 @@
-/* Neon Vice Cover Studio: a dark editor with a pink-orange sunset accent. */
+/* Neon Vice Cover Studio: a dark editor with a pink-orange sunset accent.
+   Polished pass: clearer keyboard focus, a disabled state for the export
+   buttons while a PNG is being written, and a softer, more readable hint
+   style for the new export note. */
 :root {
   --night: #150a24;
   --card: #221239;
@@ -19,14 +22,18 @@ html, body { margin: 0; min-height: 100%; background: var(--night); color: var(-
 fieldset { margin: 0; padding: 14px; border: 1px solid var(--card-edge); border-radius: 12px; background: var(--card); display: flex; flex-direction: column; gap: 10px; }
 legend { font-weight: 800; letter-spacing: 0.4px; padding: 0 6px; }
 .hint { margin: 0; color: var(--soft); font-size: 13px; }
+.hint code { color: var(--ink); background: #160b28; padding: 1px 5px; border-radius: 5px; font-size: 12px; }
 label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 14px; }
 label.check { flex-direction: row; align-items: center; gap: 8px; font-weight: 600; }
 input[type=text] { font: inherit; color: var(--ink); background: #160b28; padding: 9px 10px; border: 1px solid var(--rule); border-radius: 8px; }
+input[type=text]:focus, button:focus-visible, .file-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
 input[type=range] { width: 100%; accent-color: var(--pink); }
 input[type=file] { display: none; }
 button { font: inherit; font-weight: 700; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 8px; background: #2c1747; color: var(--ink); cursor: pointer; }
 button:hover { border-color: var(--pink); }
+button:disabled { opacity: 0.55; cursor: wait; border-color: var(--rule); }
 button.primary { background: linear-gradient(90deg, var(--pink), var(--amber)); border: 0; color: #fff; font-size: 16px; }
+button.primary:disabled { opacity: 0.6; }
 .file-btn { display: inline-block; padding: 7px 10px; border-radius: 7px; background: #2c1747; border: 1px solid var(--rule); cursor: pointer; font-weight: 700; }
 .file-btn:hover { border-color: var(--pink); }
 .slot { display: flex; gap: 10px; align-items: center; padding: 8px; border: 1px solid var(--card-edge); border-radius: 10px; background: #1a0e30; }
@@ -37,6 +44,7 @@ button.primary { background: linear-gradient(90deg, var(--pink), var(--amber)); 
 .choice-list { display: flex; flex-direction: column; gap: 8px; }
 .choice-list label { flex-direction: row; align-items: center; gap: 8px; font-weight: 600; }
 #notice { margin: 0; color: #8dffb0; min-height: 1.2em; font-size: 13px; }
+#export-note { font-size: 12px; }
 .stage { position: sticky; top: 28px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 #poster { width: min(72vh, 62vw); height: auto; max-height: 82vh; background: #fdfbf7; box-shadow: 0 14px 44px rgba(0, 0, 0, 0.55); border-radius: 4px; cursor: grab; touch-action: none; }
 #poster:active { cursor: grabbing; }

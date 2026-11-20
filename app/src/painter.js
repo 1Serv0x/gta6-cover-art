@@ -3,6 +3,13 @@
 // per panel), a Vice City neon-sunset wash, heavy poster lettering along the
 // foot, and an optional vector palm-sunset emblem. All of it is drawn here
 // from scratch: no Rockstar logo, artwork or font anywhere.
+//
+// Polished pass: the headline is now filled with a white-to-warm-pink
+// vertical gradient (instead of flat white) with a second, softer neon glow
+// underneath, and the tagline sits on a dark translucent pill so it stays
+// readable over bright photos. The foot scrim is a touch taller (0.30 of
+// the cover) so long headlines keep their contrast.
+
 import { FRAMES } from './frames.js';
 
 /** Pixel boxes for the panels of a cover this size, borders and gutters in. */
@@ -120,12 +127,13 @@ function sunsetWash(ctx, box, warmth) {
   ctx.fillRect(box.x, box.y, box.w, box.h);
 }
 
-/** The words: a dark scrim along the foot, the headline in Anton, tagline under it. */
+/** The words: a dark scrim along the foot, the headline in Anton with a
+ *  white-to-pink gradient and a double neon glow, tagline on a dark pill. */
 function paintHeadline(ctx, w, h, edge, cover) {
-  const scrimH = h * 0.27;
+  const scrimH = h * 0.3;
   const scrim = ctx.createLinearGradient(0, h - scrimH, 0, h);
   scrim.addColorStop(0, 'rgba(12, 0, 24, 0)');
-  scrim.addColorStop(1, 'rgba(12, 0, 24, 0.78)');
+  scrim.addColorStop(1, 'rgba(12, 0, 24, 0.82)');
   ctx.fillStyle = scrim;
   ctx.fillRect(edge, h - scrimH, w - edge * 2, scrimH);
 
@@ -137,9 +145,10 @@ function paintHeadline(ctx, w, h, edge, cover) {
       size -= 2;
       ctx.font = `${size}px Anton, 'Arial Black', sans-serif`;
     }
+    const baselineY = h - h * 0.085;
     ctx.save();
     // A slight lean, the poster-lettering slant.
-    ctx.translate(w / 2, h - h * 0.085);
+    ctx.translate(w / 2, baselineY);
     ctx.transform(1, 0, -0.07, 1, 0, 0);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
@@ -147,10 +156,18 @@ function paintHeadline(ctx, w, h, edge, cover) {
     ctx.strokeStyle = 'rgba(18, 0, 32, 0.92)';
     ctx.lineWidth = Math.max(2, size * 0.09);
     ctx.strokeText(headline, 0, 0);
-    ctx.fillStyle = '#ffffff';
+    // Soft outer glow first, then the crisp gradient fill on top.
     ctx.shadowColor = 'rgba(255, 45, 150, 0.55)';
-    ctx.shadowBlur = size * 0.18;
+    ctx.shadowBlur = size * 0.22;
     ctx.shadowOffsetY = size * 0.03;
+    ctx.fillStyle = 'rgba(255, 45, 150, 0.9)';
+    ctx.fillText(headline, 0, 0);
+    ctx.shadowBlur = size * 0.1;
+    const grad = ctx.createLinearGradient(0, -size, 0, size * 0.12);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.55, '#fff4fa');
+    grad.addColorStop(1, '#ffc2e2');
+    ctx.fillStyle = grad;
     ctx.fillText(headline, 0, 0);
     ctx.restore();
   }
@@ -162,8 +179,19 @@ function paintHeadline(ctx, w, h, edge, cover) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
     try { ctx.letterSpacing = `${Math.round(size * 0.42)}px`; } catch { /* older browsers */ }
+    const textW = ctx.measureText(tagline).width;
+    const pillW = Math.min(w * 0.9, textW + size * 1.6);
+    const pillH = size * 2.1;
+    const pillX = w / 2 - pillW / 2;
+    const pillY = h - h * 0.028 - size * 0.55 - pillH / 2;
+    ctx.save();
+    ctx.fillStyle = 'rgba(12, 0, 24, 0.55)';
+    ctx.beginPath();
+    ctx.roundRect(pillX, pillY, pillW, pillH, pillH / 2);
+    ctx.fill();
     ctx.fillStyle = '#ffd9ec';
     ctx.fillText(tagline, w / 2, h - h * 0.028);
+    ctx.restore();
     try { ctx.letterSpacing = '0px'; } catch { /* older browsers */ }
   }
 }

@@ -6,8 +6,12 @@
 // buildDossier library. Outside the grader, MAKEFUN_OUTPUT_DIR stands in
 // for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+//
+// Polished pass: the copy step now reports what it handed in (app files
+// and screenshots found), so a silent empty hand-in is obvious at a glance
+// instead of surfacing only later as a failed gate check.
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-app.ts';
@@ -22,6 +26,10 @@ function copyEntryTree() {
   if (existsSync(join(here, 'screenshots'))) {
     cpSync(join(here, 'screenshots'), join(outDir, 'screenshots'), { recursive: true });
   }
+  const shots = existsSync(join(outDir, 'screenshots'))
+    ? readdirSync(join(outDir, 'screenshots')).filter((f) => /\.(jpe?g|png)$/i.test(f))
+    : [];
+  console.log(`handed in app/ and ${shots.length} screenshot(s): ${shots.join(', ') || 'none'}`);
 }
 
 // The gate's caps (reference/gate.json): text_max_bytes shapes the dossier
@@ -43,3 +51,4 @@ function writeDossier() {
 
 copyEntryTree();
 writeDossier();
+console.log(`dossier written to ${join(outDir, 'dossier.json')}`);

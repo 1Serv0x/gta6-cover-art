@@ -69,6 +69,8 @@
       <legend>Words</legend>
       <label>Headline <input id="headline" type="text" maxlength="30" value="Neon Vice"></label>
       <label>Tagline <input id="tagline" type="text" maxlength="48" value="Vice City • 2026"></label>
+      <p class="hint">The headline is the big poster lettering — and it also
+        names your exported PNG, e.g. <code>neon-vice-1080x1080.png</code>.</p>
     </fieldset>
 
     <fieldset>
@@ -86,7 +88,9 @@
       </div>
       <button id="download" type="button" class="primary">Export this size</button>
       <button id="download-all" type="button">Export all three sizes</button>
-      <p id="notice" role="status"></p>
+      <p class="hint" id="export-note">Exports run one at a time — the buttons
+        pause while a PNG is being written, so downloads never overlap.</p>
+      <p id="notice" role="status" aria-live="polite"></p>
     </fieldset>
   </aside>
 

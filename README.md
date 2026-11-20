@@ -18,13 +18,18 @@ City neon-sunset grade — and exports it as a PNG to share.
   Tick "One photo for all panels" to fill every panel from Photo A.
 - **Crop and position per panel** — click a panel in the preview to pick
   it, drag to move its photo, scroll to zoom, or use the Zoom / Pan sliders.
+  Drag pans are clamped to the slider range, so a fast drag can never fling
+  a photo off its panel.
 - **Caption lettering** — a headline in heavy condensed Anton (SIL Open Font
-  License, vendored under `app/fonts/`) with a poster slant and neon glow,
-  plus a letterspaced tagline.
+  License, vendored under `app/fonts/`) with a poster slant, a
+  white-to-pink gradient fill and a double neon glow, plus a letterspaced
+  tagline on a dark translucent pill so it stays readable over bright photos.
 - **Neon-sunset grade** — a warm-to-magenta grade, vignette and a
   vector-drawn palm-sunset emblem, all adjustable.
 - **One-step export** — PNG at 1080×1080, 1080×1350 or 1920×1080, or all
-  three at once.
+  three at once. Export buttons lock while a PNG is being written and the
+  "all three" run plays one size at a time, so downloads never overlap;
+  files are named from your headline, e.g. `neon-vice-1080x1080.png`.
 
 Everything runs offline in the browser: no network requests, no uploads,
 photos never leave your machine. All art in the app is original — no

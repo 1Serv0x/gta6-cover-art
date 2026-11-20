@@ -91,3 +91,10 @@ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
 DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
+
+---
+Note (Neon Vice Cover Studio): this copy of the license is vendored
+alongside app/fonts/Anton-Regular.ttf, the Anton font this app uses for
+its headline lettering. The font itself is unmodified; the app's cover
+art is original work and contains no Rockstar Games logo, artwork,
+character or font.
